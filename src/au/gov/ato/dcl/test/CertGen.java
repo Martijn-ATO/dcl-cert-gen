@@ -1,6 +1,8 @@
 package au.gov.ato.dcl.test;
 
 import java.io.ByteArrayInputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
@@ -39,17 +41,17 @@ import sun.security.x509.X509CertInfo;
 
 public class CertGen {
 
-	public static String certChain(String dn) throws GeneralSecurityException, IOException {
-		return CertGen.caCertPEM().concat(CertGen.certToString(CertGen.apply(dn)));
+	public static String certChain(String dn, String privKeyPath) throws GeneralSecurityException, IOException {
+		return CertGen.caCertPEM().concat(CertGen.certToString(CertGen.apply(dn, privKeyPath)));
 	}
 
-	public static X509Certificate apply(String dn) throws GeneralSecurityException, IOException {
+	public static X509Certificate apply(String dn, String privKeyPath) throws GeneralSecurityException, IOException {
 		final KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
 		keyGen.initialize(1024);
 		final KeyPair keypair = keyGen.generateKeyPair();
 		// PrivateKey privKey = keypair.getPrivate();
 		// PublicKey pubKey = keypair.getPublic();
-		final PrivateKey caKey = CertGen.getCaKeyFromString(CertGen.caKeyPEM());
+		final PrivateKey caKey = CertGen.getCaKeyFromString(CertGen.caKeyPEM(privKeyPath));
 		final Certificate caCert = CertGen.getCACertFromString(CertGen.caCertPEM());
 		return generateCertificate(dn, keypair, 365, "SHA1withRSA", caKey, caCert);
 	}
@@ -58,10 +60,10 @@ public class CertGen {
 	 * Read the CA private key from bundle
 	 * 
 	 * @return base64 encoded CA private key
+	 * @throws FileNotFoundException 
 	 */
-	private static String caKeyPEM() {
-		final InputStream in = new CertGen().getClass()
-				.getResourceAsStream("/resources/Digital_Capability_Locator_Authority.key");
+	private static String caKeyPEM(String privKeyPath) throws FileNotFoundException {
+		final InputStream in = new FileInputStream(privKeyPath);
 		final java.util.Scanner scanner = new java.util.Scanner(in);
 		final java.util.Scanner s = scanner.useDelimiter("\\A");
 		final String keyPEM = s.hasNext() ? s.next() : "";

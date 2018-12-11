@@ -1,2 +1,5 @@
 bin
 dist
+Digital_Capability_Locator_Authority.key
+src/resources/Digital_Capability_Locator_Authority.crl
+src/resources/Digital_Capability_Locator_Authority.pem
