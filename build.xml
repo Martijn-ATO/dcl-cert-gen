@@ -21,9 +21,6 @@
   	<target name="compile" depends="clean, makedir">
     	<javac srcdir="${src.dir}" destdir="${build.dir}">
     	</javac>	
-  		<copy todir="${build.dir}/resources">
-  		  <fileset dir="${src.dir}/resources"/>
-  		</copy>
   	</target>
  
   	<!-- Defualt target to run all targets-->
