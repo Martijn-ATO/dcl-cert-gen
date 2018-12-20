@@ -21,6 +21,7 @@ import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
+import java.time.Instant;
 import java.util.Base64;
 import java.util.Date;
 import java.util.Vector;
@@ -158,6 +159,7 @@ public class CertGen {
 			PrivateKey caKey, Certificate caCert) throws GeneralSecurityException, IOException {
 		final PrivateKey privkey = pair.getPrivate();
 		final X509CertInfo info = new X509CertInfo();
+		//final Date from = Date.from(Instant.now().minusSeconds(86400));
 		final Date from = new Date();
 		final Date to = new Date(from.getTime() + days * 86400000l);
 		final CertificateValidity interval = new CertificateValidity(from, to);
